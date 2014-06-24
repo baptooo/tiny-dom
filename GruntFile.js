@@ -11,10 +11,21 @@ module.exports = function(grunt) {
                     keepalive: true
                 }
             }
+        },
+
+        uglify: {
+            dist: {
+                files: {
+                    'build/tiny-dom.min.js': ['src/tiny-dom.js']
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.registerTask('serve', ['connect']);
+
+    grunt.registerTask('dist', ['uglify']);
 }
