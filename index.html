@@ -12,6 +12,8 @@
     <script>
         $(function() {
             console.log($('body'));
+            $('body').addClass('test-class');
+            $('body').html($('body').html() + '<h1>Test $.html</h1>');
         });
     </script>
 </body>
