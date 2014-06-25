@@ -10,8 +10,16 @@
     <script src="src/tiny-dom-tpl.js"></script>
 
     <script type="text/template" id="testTpl">
+        <img src="{{picture}}" width="250" />
+
         <h1>{{model}}</h1>
         <cite>{{description}}</cite>
+
+        <select name="" id="">
+            {{#test.a.b.c}}
+            <option value="{{key}}">Option {{key}}</option>
+            {{/test.a.b.c}}
+        </select>
 
         <ul>
             {{#criterias}}
@@ -29,20 +37,28 @@
 
             tpl.cache.testTpl = testTpl.innerHTML;
             var html = tpl('testTpl', {
-                model: 'Clio',
-                description: '4 roues motrices véhicule de ville',
+                model: 'Gretsch',
+                description: '6120 Chet atkins 1962 édition limitée',
                 criterias: [
                     {
-                        label: 'Kilométrage',
-                        value: '550km'
+                        label: 'Micros',
+                        value: 'Trois sélecteurs (low,medium,high)'
                     }, {
-                        label: 'Puissance',
-                        value: '5ch'
+                        label: 'Bois',
+                        value: 'Erable'
                     }, {
                         label: 'Couleur',
-                        value: 'Bleu marine'
+                        value: 'Rouge foncée'
                     }
-                ]
+                ],
+                picture: 'http://static.musicbusiness.fr/media/catalog/product/cache/5/image/9df78eab33525d08d6e5fb8d27136e95/g/r/gretsch-g5422tdc-walnut-2504812517-1.jpg',
+                test: {
+                    a: {
+                        b: {
+                            c: [0,1,2,3,4,5]
+                        }
+                    }
+                }
             });
             console.log(html);
 

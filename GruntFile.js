@@ -16,7 +16,8 @@ module.exports = function(grunt) {
         uglify: {
             dist: {
                 files: {
-                    'build/tiny-dom.min.js': ['src/tiny-dom.js']
+                    'build/tiny-dom.min.js': ['src/tiny-dom.js'],
+                    'build/tiny-dom-tpl.min.js': ['src/tiny-dom-tpl.js']
                 }
             }
         }

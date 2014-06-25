@@ -1,13 +1,13 @@
 (function(exports, word, exps, arr, u) {
 
     function loop(tplStr, term, obj) {
-        if(!obj[term]) return '';
+        var loopObj = eval('obj.' + term);
+        if(!loopObj) return '';
 
         var _out = '',
             start = tplStr.indexOf('#' + term) + term.length + 3,
             end = tplStr.indexOf('/' + term) - 2,
-            loopTplStr = tplStr.substring(start, end),
-            loopObj = obj[term];
+            loopTplStr = tplStr.substring(start, end);
 
         for(var i = 0; i < loopObj.length; i++) {
             var isObj = /^o/.test(typeof loopObj[i]);
@@ -17,6 +17,7 @@
     };
 
     var reg = new RegExp('\{\{(' + exps + word + ')\}\}', 'gi');
+    console.log(reg);
     function process(tplStr, obj) {
         return tplStr.replace(reg, function(m,k) {
             var exp = k.match(exps)[0] || '', term = k.replace(exp, '');
@@ -24,8 +25,11 @@
                 case '#':
                     return loop(tplStr, term, obj);
                     break;
+                case '/':
+                    return '';
+                    break;
             };
-            return obj[k] == u ? '' : obj[k];
+            return eval('obj.' + k) || '';
         });
     }
     function tpl(str,obj) {
@@ -34,4 +38,4 @@
     tpl.cache = {};
 
     exports.tpl = tpl;
-})(window, '\\w+', '[#|\/]{0,1}', [], undefined);
+})(window, '[\\w\\.]+', '[#|\/]{0,1}', [], undefined);
