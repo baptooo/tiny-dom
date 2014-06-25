@@ -17,7 +17,6 @@
     };
 
     var reg = new RegExp('\{\{(' + exps + word + ')\}\}', 'gi');
-    console.log(reg);
     function process(tplStr, obj) {
         return tplStr.replace(reg, function(m,k) {
             var exp = k.match(exps)[0] || '', term = k.replace(exp, '');
