@@ -7,13 +7,46 @@
 <body>
     <!--<script src="src/ki.js"></script>-->
     <script src="src/tiny-dom.js"></script>
-    <h1>Dodu</h1>
+    <script src="src/tiny-dom-tpl.js"></script>
+
+    <script type="text/template" id="testTpl">
+        <h1>{{model}}</h1>
+        <cite>{{description}}</cite>
+
+        <ul>
+            {{#criterias}}
+            <li>
+                <strong>{{label}}</strong>: {{value}}
+            </li>
+            {{/criterias}}
+        </ul>
+    </script>
 
     <script>
         $(function() {
             console.log($('body'));
             $('body').addClass('test-class');
-            $('body').html($('body').html() + '<h1>Test $.html</h1>');
+
+            tpl.cache.testTpl = testTpl.innerHTML;
+            var html = tpl('testTpl', {
+                model: 'Clio',
+                description: '4 roues motrices véhicule de ville',
+                criterias: [
+                    {
+                        label: 'Kilométrage',
+                        value: '550km'
+                    }, {
+                        label: 'Puissance',
+                        value: '5ch'
+                    }, {
+                        label: 'Couleur',
+                        value: 'Bleu marine'
+                    }
+                ]
+            });
+            console.log(html);
+
+            $('body').html($('body').html() + html);
         });
     </script>
 </body>
