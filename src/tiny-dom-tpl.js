@@ -10,9 +10,10 @@
      * @param tplStr
      * @param term
      * @param obj
+     * @param expFrags
      * @returns {string}
      */
-    function loop(tplStr, term, obj) {
+    function loop(tplStr, term, obj, expFrags) {
         // LoopObj data node
         var loopObj = eval('obj.' + term);
         // Doing nothing if asked data is missing
@@ -27,12 +28,12 @@
             loopTplStr = tplStr.substring(start, end);
 
         // Storing fragment to retrive it later
-        tpl.expFrags.push(loopTplStr);
+        expFrags.push(loopTplStr);
 
         // Processing fragment for each data node item
         for(var i = 0; i < loopObj.length; i++) {
             // Recursive call to process to generate fragment
-            _out += process(loopTplStr, /^o/.test(typeof loopObj[i]) ? loopObj[i] : {'key' : i});
+            _out += process(loopTplStr, /^o/.test(typeof loopObj[i]) ? loopObj[i] : {'key' : i}, expFrags)[0];
         }
         return _out;
     };
@@ -42,25 +43,29 @@
      * with data given
      * @param tplStr
      * @param obj
+     * @param expFrags
      * @returns {string}
      */
-    function process(tplStr, obj) {
+    function process(tplStr, obj, expFrags) {
         // Executing parser for each occurence found in tplStr via reg
-        return tplStr.replace(reg, function(m,k) {
+        return [tplStr.replace(reg, function(m,k) {
             // Matching expression case
             var exp = k.match(exps)[0] || '', term = k.replace(exp, '');
             // Calling generator for each expression
             switch(exp) {
-                // Loop generator
+                // Loop
                 case '#':
-                    return loop(tplStr, term, obj);
-                // End tag generator
+                    return loop(tplStr, term, obj, expFrags);
+                // Partial
+                case '>':
+                    return tpl.cache[term] ? tpl(term, obj) : '';
+                // End tag
                 case '/':
                     return '';
             };
             // Eval asked term and returns it or empty string if undefined
             return eval('obj.' + k) != undefined ? eval('obj.' + k) : '';
-        });
+        }), expFrags];
     }
 
     /**
@@ -86,14 +91,12 @@
      * @returns {*}
      */
     function tpl(str, obj) {
-        // Reset expFrags Array for current template
-        tpl.expFrags = [];
-        // Process the current template
-        var processed = process(tpl.cache[str] || str, obj);
+        // Processing the current template
+        var processed = process(tpl.cache[str] || str, obj, []);
         // Returns pure or cleaned template if expression were found
-        return tpl.expFrags.length ? cleanFrags(processed, tpl.expFrags) : processed;
+        return processed[1].length ? cleanFrags(processed[0], processed[1]) : processed;
     };
     tpl.cache = {};
 
     exports.tpl = tpl;
-})(window.exports || window, '[\\w\\.]+', '[#|\/]{0,1}');
+})(window.exports || window, '[\\w\\.]+', '[\>|#|\/]{0,1}');
