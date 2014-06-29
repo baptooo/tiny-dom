@@ -13,9 +13,10 @@
                 // Id Asked ?
                 (selector[0] == '#' ? 'ById' :
                     // Class asked ? if no tag
-                    selector[0] == '.' ? 'sByClassName' : 'sByTagName')](selector) :
-                        // selector was not a string ? return selector itselfs
-                        selector;
+                    selector[0] == '.' ? 'sByClassName' : 'sByTagName')]
+                        (/^\.|^\#/.test(selector) ? selector.slice(1) : selector, '') :
+                            // selector was not a string ? return selector itselfs
+                            selector;
 
         // Creating Array if result was id
         if(!result.length) result = [result];
