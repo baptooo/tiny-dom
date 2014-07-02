@@ -19,7 +19,7 @@
 
         <select name="" id="">
             {{#test.a.b.c}}
-            <option value="{{key}}">Option {{key}}</option>
+            <option value="{{.}}">Option {{.}}</option>
             {{/test.a.b.c}}
         </select>
 
@@ -29,6 +29,11 @@
             {{#criterias}}
             <li>
                 <strong>{{label}}</strong>: {{value}}
+                <ul>
+                    {{#loop}}
+                    <li>Sub-list test item n°{{.}}</li>
+                    {{/loop}}
+                </ul>
             </li>
             {{/criterias}}
         </ul>
@@ -38,7 +43,7 @@
         <p>"Include simpleLoop partial"</p>
         <ul>
             {{#items}}
-                <li>Partial item: {{key}}</li>
+                <li>Partial item: {{.}}</li>
             {{/items}}
         </ul>
     </script>
@@ -57,7 +62,8 @@
                 criterias: [
                     {
                         label: 'Micros',
-                        value: 'Trois sélecteurs (low,medium,high)'
+                        value: 'Trois sélecteurs (low,medium,high)',
+                        loop: [0,1,2,3]
                     }, {
                         label: 'Bois',
                         value: 'Erable'
